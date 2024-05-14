@@ -72,12 +72,21 @@ public class Main {
             }
 
             if (validOption) {
+                System.out.println("Digite o valor a ser convertido:");
+                double amount = scanner.nextDouble();
+
                 ConectApi api = new ConectApi();
                 try {
                     CurrencyConversionResponse response = api.fetchCurrencyConversion(baseCurrency.toUpperCase(), targetCurrency.toUpperCase());
                     if (response != null) {
-                        System.out.println("Taxa de "+ baseCurrency + " para " + targetCurrency + " : " + response.getRateForCurrency(targetCurrency.toUpperCase()));
-                        System.out.println("\n********************************************");
+                        Double rate = response.getRateForCurrency(targetCurrency.toUpperCase());
+                        if (rate != null) {
+                            double convertedAmount = amount * rate;
+                            System.out.printf("O valor de %.2f %s em %s é: %.2f%n", amount, baseCurrency, targetCurrency, convertedAmount);
+                            System.out.println("\n********************************************");
+                        } else {
+                            System.out.println("Falha ao obter a taxa de conversão.");
+                        }
                     } else {
                         System.out.println("Falha ao obter a resposta da API.");
                         System.out.println("\n********************************************");
